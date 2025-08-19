@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Questionário de Alinhamento Egoico</title>
+  <style>
+    :root{
+      --bg: #0b0d12;
+      --card: #11141a;
+      --muted: #9aa4b2;
+      --text: #e6e9ef;
+      --accent: #7c5cff;
+      --accent-2: #4cc9f0;
+      --danger: #ff6b6b;
+      --warn: #fcbf49;
+      --ok: #2ec4b6;
+      --ring: rgba(124,92,255,.35);
+      --outline: 1px solid color-mix(in oklab, var(--text) 10%, transparent);
+      --shadow: 0 10px 25px rgba(0,0,0,.35);
+    }
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg: #f6f7fb; --card: #ffffff; --text: #0f172a; --muted:#576176; --ring: rgba(124,92,255,.25);
+      }
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;background:radial-gradient(1200px 600px at 10% -10%, rgba(124,92,255,.12), transparent 60%),radial-gradient(1000px 600px at 110% 10%, rgba(76,201,240,.12), transparent 60%), var(--bg);color:var(--text);font:16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"}
+
+    .container{max-width:1100px;margin:32px auto;padding:0 16px}
+
+    header.hero{display:grid;gap:16px;padding:24px;border:var(--outline);border-radius:20px;background:linear-gradient(180deg, color-mix(in oklab,var(--card), transparent 10%), color-mix(in oklab, var(--card), transparent 0%));box-shadow:var(--shadow)}
+    .title{font-size:clamp(1.2rem, 1.1rem + 1.5vw, 2rem);font-weight:800;letter-spacing:.2px}
+    .subtitle{color:var(--muted)}
+    .legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+    .pill{border:var(--outline);padding:6px 10px;border-radius:999px;color:var(--muted);backdrop-filter:saturate(120%);}
+
+    .grid{display:grid;grid-template-columns:1fr;gap:18px;margin-top:18px}
+    @media(min-width:920px){.layout{display:grid;grid-template-columns:1.35fr .65fr;gap:22px;align-items:start}}
+
+    section.card{background:var(--card);border-radius:18px;border:var(--outline);box-shadow:var(--shadow)}
+    section.card > header{padding:16px 18px;border-bottom:var(--outline);display:flex;align-items:center;gap:10px}
+    section.card > header h2{margin:0;font-size:1rem}
+
+    form{display:grid;gap:12px;padding:16px}
+    fieldset{margin:0;padding:0;border:0}
+    .section{border:1px dashed color-mix(in oklab, var(--muted) 30%, transparent);border-radius:14px;padding:12px}
+    .section-title{font-weight:700;margin:0 0 8px 0;color:var(--accent-2)}
+
+    .q{display:grid;gap:8px;padding:10px;border-radius:12px}
+    .q:hover{outline:1px solid color-mix(in oklab, var(--accent) 40%, transparent)}
+    .q-label{font-weight:600}
+    .q-help{color:var(--muted);font-size:.92rem}
+
+    /* Segmented control */
+    .scale{display:inline-grid;grid-auto-flow:column;gap:6px;background:color-mix(in oklab, var(--card), #000 8%);border-radius:999px;padding:6px;border:1px solid color-mix(in oklab, var(--text) 12%, transparent)}
+    .scale input{display:none}
+    .scale label{user-select:none;cursor:pointer;padding:6px 12px;border-radius:999px;border:1px solid transparent;min-width:50px;text-align:center;font-weight:700}
+    .scale input:checked + label{background:linear-gradient(180deg, color-mix(in oklab, var(--accent) 30%, transparent), color-mix(in oklab, var(--accent) 10%, transparent));border-color:color-mix(in oklab, var(--accent) 50%, transparent);box-shadow:inset 0 -1px 0 rgba(0,0,0,.15)}
+    .opt--1 + label{color:var(--danger)}
+    .opt-0 + label{color:var(--warn)}
+    .opt-1 + label{color:var(--ok)}
+
+    .controls{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}
+    .btn{appearance:none;border:1px solid color-mix(in oklab, var(--text) 20%, transparent);background:linear-gradient(180deg, color-mix(in oklab, var(--card), white 2%), color-mix(in oklab, var(--card), black 4%));color:var(--text);padding:10px 14px;border-radius:12px;font-weight:700;cursor:pointer;transition:transform .03s ease, box-shadow .15s ease}
+    .btn.primary{border-color:color-mix(in oklab, var(--accent) 50%, transparent);background:linear-gradient(180deg, color-mix(in oklab, var(--accent) 30%, transparent), color-mix(in oklab, var(--accent) 10%, transparent));box-shadow:0 10px 18px var(--ring)}
+    .btn:hover{transform:translateY(-1px)}
+    .btn:active{transform:translateY(0)}
+
+    .status{display:flex;gap:12px;align-items:center;color:var(--muted)}
+    .status .dot{width:10px;height:10px;border-radius:50%;background:var(--warn);box-shadow:0 0 0 4px color-mix(in oklab, var(--warn) 20%, transparent)}
+
+    /* Results */
+    .results{display:grid;gap:16px;padding:16px}
+    .summary{display:grid;gap:10px}
+    .badges{display:flex;gap:8px;flex-wrap:wrap}
+    .badge{border-radius:999px;padding:6px 10px;border:1px solid color-mix(in oklab, var(--text) 14%, transparent);color:var(--muted)}
+    .veredito{font-size:1.3rem;font-weight:800}
+
+    .charts{display:grid;gap:16px}
+    @media(min-width:920px){.charts{grid-template-columns: 1fr 1fr}}
+    .chart-card{background:var(--card);border:var(--outline);border-radius:14px;padding:12px}
+
+    /* Category bars */
+    .cat-row{display:grid;grid-template-columns: 1fr 120px;gap:10px;align-items:center;margin:8px 0}
+    .cat-name{color:var(--muted);font-size:.95rem}
+    .bar-wrap{position:relative;height:14px;background:color-mix(in oklab, var(--card), black 6%);border:1px solid color-mix(in oklab, var(--text) 12%, transparent);border-radius:999px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;gap:0}
+    .bar-fill{display:none} .half{position:relative;height:100%} .half .fill{position:absolute;top:0;bottom:0;width:0} .half.left .fill{right:0} .half.right .fill{left:0}
+
+    /* Footer */
+    footer{margin:20px 0;color:var(--muted);text-align:center}
+
+    /* Utility */
+    .hidden{display:none}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="hero">
+      <div class="title">Questionário de Alinhamento Egoico</div>
+      <p class="subtitle">Responda 20 perguntas usando a escala <strong>+1 / 0 / -1</strong>. No final, calcule o resultado total, veja o veredito e visualize gráficos do seu alinhamento geral e por categoria.</p>
+      <div class="legend">
+        <span class="pill">+1 = Sim, claramente</span>
+        <span class="pill">0 = Parcial / neutro</span>
+        <span class="pill">-1 = Não, o oposto acontece</span>
+        <span class="pill">Faixa total: -20 a +20</span>
+      </div>
+    </header>
+
+    <div class="layout">
+      <section class="card">
+        <header>
+          <h2>Questionário</h2>
+          <div class="status" id="status">
+            <span class="dot" id="statusDot"></span>
+            <span><strong id="answeredCount">0</strong>/20 respondidas</span>
+          </div>
+        </header>
+        <form id="quiz" novalidate>
+          <!-- Sections will be injected by JS to keep markup compact and consistent -->
+        </form>
+        <div class="controls" style="padding:0 16px 16px 16px">
+          <button class="btn primary" id="calcBtn" type="button">Calcular resultado</button>
+          <button class="btn" id="resetBtn" type="button">Limpar respostas</button>
+          <button class="btn" id="printBtn" type="button">Imprimir/Salvar PDF</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <header>
+          <h2>Resultado</h2>
+        </header>
+        <div class="results">
+          <div class="summary">
+            <div class="badges">
+              <span class="badge">Regra de interpretação:</span>
+              <span class="badge">+15 a +20 — Alto alinhamento</span>
+              <span class="badge">+6 a +14 — Moderado</span>
+              <span class="badge">0 a +5 — Fraco</span>
+              <span class="badge">&lt; 0 — Prejudicial</span>
+            </div>
+            <div class="veredito" id="veredito">Preencha e clique em “Calcular resultado”.</div>
+            <div id="incompleteMsg" class="hidden" style="color:var(--warn);font-weight:600">Há perguntas sem resposta. Você ainda pode calcular, mas o resultado ficará parcial.</div>
+          </div>
+
+          <div class="charts">
+            <div class="chart-card">
+              <h3 style="margin:0 0 8px 0;font-size:1rem">Alinhamento Geral</h3>
+              <svg id="donut" viewBox="0 0 160 160" width="100%" height="260" role="img" aria-label="Gráfico do resultado geral em formato de anel">
+                <!-- background ring -->
+                <circle cx="80" cy="80" r="64" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="16"/>
+                <!-- progress ring -->
+                <circle id="donutProgress" cx="80" cy="80" r="64" fill="none" stroke="var(--accent)" stroke-width="16" stroke-linecap="round" transform="rotate(-90 80 80)" stroke-dasharray="0 402" />
+                <!-- zero marker -->
+                <circle cx="80" cy="80" r="52" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="2" stroke-dasharray="4 6"/>
+                <text id="scoreText" x="80" y="76" text-anchor="middle" font-size="28" font-weight="800" fill="currentColor">0</text>
+                <text id="scoreSub" x="80" y="100" text-anchor="middle" font-size="12" fill="var(--muted)">de -20 a +20</text>
+              </svg>
+            </div>
+            <div class="chart-card">
+              <h3 style="margin:0 0 8px 0;font-size:1rem">Por Categoria</h3>
+              <div id="catBars"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <footer>
+      <small>Feito com princípios de design claro, sem bibliotecas externas. Seus dados ficam somente no seu navegador.</small>
+    </footer>
+  </div>
+
+  <script>
+    // ------------------------------
+    // Dados do framework
+    // ------------------------------
+    const sections = [
+      { key: 'autopreservacao', name: 'Autopreservação', color: '#2ec4b6', items: [
+        'Eu me sinto fisicamente bem e energizado(a) depois de passar tempo com meu parceiro(a)?',
+        'Nosso dia-a-dia respeita meus limites de sono, alimentação e descanso?',
+        'O relacionamento diminui (-1), não altera (0) ou reduz (+1) meu nível de estresse e ansiedade?'
+      ]},
+      { key: 'longoPrazo', name: 'Ganho a Longo Prazo', color: '#4cc9f0', items: [
+        'Nosso vínculo facilita — em vez de atrapalhar — minhas metas profissionais ou financeiras de 5+ anos?',
+        'Tomamos decisões conjuntas que aumentam patrimônio ou competências de ambos?',
+        'Há planejamento compartilhado (viagens, investimentos, cursos) que reflita objetivos futuros meus e não só do(a) parceiro(a)?'
+      ]},
+      { key: 'reciprocidade', name: 'Reciprocidade Estratégica', color: '#7c5cff', items: [
+        'O apoio emocional que ofereço e recebo é equilibrado ao longo do tempo?',
+        'Quando há conflitos, a solução leva em conta meus interesses na mesma medida que os dele(a)?',
+        'Sinto que “dou mais do que recebo” (-1), “dou na medida” (0) ou “recebo proporcionalmente” (+1)?'
+      ]},
+      { key: 'autonomia', name: 'Autonomia de Pensamento', color: '#f38ba8', items: [
+        'Posso expressar opiniões contrárias sem sarcasmo, punição ou “gelo” depois?',
+        'Decisões sobre carreira, finanças ou corpo são tomadas por mim, sem coerção?',
+        'Há respeito por hobbies e amizades independentes (tempo, espaço, privacidade)?'
+      ]},
+      { key: 'excelencia', name: 'Excelência & Maestria', color: '#f1c40f', items: [
+        'Meu(a) parceiro(a) estimula meus estudos, exercícios ou projetos pessoais?',
+        'Celebramos conquistas individuais sem competitividade ou depreciação velada?',
+        'Há conversas regulares sobre autodesenvolvimento, metas de aprendizado ou performance?'
+      ]},
+      { key: 'rejeicao', name: 'Rejeição do Sacrifício Obrigatório', color: '#ff6b6b', items: [
+        'Tenho liberdade de dizer “não” a pedidos que contrariem valores ou prioridades sem culpa induzida?',
+        'Contribuições financeiras e tarefas domésticas são acordadas, não impostas como “prova de amor”?',
+        'Quando cedo em algo, é por escolha estratégica (ex.: ganhar tempo, evitar coisa menor), não por pressão emocional?'
+      ]},
+      { key: 'responsabilidade', name: 'Responsabilidade Total', color: '#94d82d', items: [
+        'Ambos reconhecem erros e pedem desculpas sem desculpas vazias (“se você se sentiu ofendido…”)?',
+        'Há compromisso mútuo com terapia, leitura ou ferramentas de melhoria quando padrões negativos se repetem?'
+      ]}
+    ];
+
+    // ------------------------------
+    // Geração do formulário
+    // ------------------------------
+    const formEl = document.getElementById('quiz');
+    let qIndex = 1;
+    const qMap = []; // mapeia pergunta -> {sectionKey, i, inputName}
+
+    sections.forEach(section => {
+      const fs = document.createElement('fieldset');
+      fs.className = 'section';
+      fs.innerHTML = `<legend class="section-title">${section.name}</legend>`;
+
+      section.items.forEach((text, i) => {
+        const name = `q${qIndex}`;
+        const q = document.createElement('div');
+        q.className = 'q';
+        q.innerHTML = `
+          <div class="q-label">${qIndex}. ${text}</div>
+          <div class="q-controls">
+            <div class="scale" role="radiogroup" aria-label="Escala de ${name}">
+              <input class="opt--1" type="radio" id="${name}-n" name="${name}" value="-1" />
+              <label for="${name}-n">-1</label>
+              <input class="opt-0" type="radio" id="${name}-0" name="${name}" value="0" />
+              <label for="${name}-0">0</label>
+              <input class="opt-1" type="radio" id="${name}-p" name="${name}" value="1" />
+              <label for="${name}-p">+1</label>
+            </div>
+          </div>`;
+        fs.appendChild(q);
+        qMap.push({ name, sectionKey: section.key, sectionName: section.name, color: section.color });
+        qIndex++;
+      });
+
+      formEl.appendChild(fs);
+    });
+
+    // ------------------------------
+    // Interações base
+    // ------------------------------
+    const answeredCountEl = document.getElementById('answeredCount');
+    const statusDot = document.getElementById('statusDot');
+    const calcBtn = document.getElementById('calcBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const printBtn = document.getElementById('printBtn');
+    const incompleteMsg = document.getElementById('incompleteMsg');
+
+    function countAnswered(){
+      const data = new FormData(formEl);
+      let c = 0; for(const {name} of qMap){ if(data.has(name)) c++; }
+      answeredCountEl.textContent = c;
+      statusDot.style.background = c === 20 ? 'var(--ok)' : (c >= 10 ? 'var(--warn)' : 'var(--danger)');
+      statusDot.style.boxShadow = `0 0 0 6px ${c===20?'rgba(46,196,182,.25)':c>=10?'rgba(252,191,73,.25)':'rgba(255,107,107,.25)'}`;
+      return c;
+    }
+
+    formEl.addEventListener('change', countAnswered);
+
+    resetBtn.addEventListener('click', () => {
+      formEl.reset();
+      countAnswered();
+      updateDonut(0);
+      document.getElementById('veredito').textContent = 'Responda e clique em “Calcular resultado”.';
+      incompleteMsg.classList.add('hidden');
+      renderCatBars({});
+      localStorage.removeItem('egoico-respostas');
+    });
+
+    printBtn.addEventListener('click', () => window.print());
+
+    // ------------------------------
+    // Cálculo
+    // ------------------------------
+    function calc(){
+      const data = new FormData(formEl);
+      let total = 0;
+      const catTotals = {}; // soma por categoria
+      const catCounts = {}; // contagem por categoria
+      let answered = 0;
+
+      qMap.forEach(({name, sectionKey}) => {
+        const v = data.get(name);
+        if(v !== null){
+          const n = +v; total += n; answered++;
+          catTotals[sectionKey] = (catTotals[sectionKey]||0) + n;
+          catCounts[sectionKey] = (catCounts[sectionKey]||0) + 1;
+        }
+      });
+
+      // Persistência opcional
+      const answers = {};
+      qMap.forEach(({name})=>{ const v = data.get(name); if(v!==null) answers[name]=+v; });
+      localStorage.setItem('egoico-respostas', JSON.stringify(answers));
+
+      const missing = 20 - answered;
+      incompleteMsg.classList.toggle('hidden', missing===0);
+
+      const verdictText = getVerdict(total);
+      document.getElementById('veredito').textContent = `${verdictText} — Pontuação ${total}${missing?` (parcial, ${missing} em aberto)`:''}`;
+
+      updateDonut(total);
+      renderCatBars({ totals: catTotals, counts: catCounts });
+    }
+
+    function getVerdict(score){
+      if(score >= 15) return 'Alto alinhamento egoico';
+      if(score >= 6) return 'Alinhamento moderado';
+      if(score >= 0) return 'Alinhamento fraco';
+      return 'Relacionamento prejudicial';
+    }
+
+    calcBtn.addEventListener('click', calc);
+
+    // ------------------------------
+    // Gráfico Donut (SVG)
+    // ------------------------------
+    const donutProgress = document.getElementById('donutProgress');
+    const scoreText = document.getElementById('scoreText');
+    const scoreSub = document.getElementById('scoreSub');
+    const CIRC = 2 * Math.PI * 64; // circunferência
+
+    function colorForScore(score){
+      // Interpola da cor negativa para positiva
+      if(score < 0) return 'var(--danger)';
+      if(score === 0) return 'var(--warn)';
+      return 'var(--ok)';
+    }
+
+    function updateDonut(score){
+      // Normaliza: -20..+20 -> 0..1
+      const pct = Math.max(0, Math.min(1, (score + 20) / 40));
+      const dash = (CIRC) * pct;
+      donutProgress.setAttribute('stroke-dasharray', `${dash} ${CIRC - dash}`);
+      donutProgress.setAttribute('stroke', colorForScore(score));
+      scoreText.textContent = score;
+      scoreSub.textContent = getVerdict(score);
+    }
+
+    // ------------------------------
+    // Barras por categoria (diverging)
+    // ------------------------------
+    const catBars = document.getElementById('catBars');
+    function renderCatBars({totals = {}, counts = {}}){
+      catBars.innerHTML = '';
+      sections.forEach(sec => {
+        const tot = totals[sec.key] || 0;
+        const count = counts[sec.key] || sec.items.length;
+        const max = sec.items.length; // amplitude positiva
+        const min = -max;
+        // Normaliza para -1..+1
+        const norm = count ? (tot / count) : 0; // média
+        // largura em % relativa ao máximo absoluto
+        const widthPct = Math.abs(norm) * 100; // já em 0..100
+        const posPct = norm>0 ? norm*100 : 0;
+        const negPct = norm<0 ? (-norm)*100 : 0;
+
+        const row = document.createElement('div');
+        row.className = 'cat-row';
+        row.innerHTML = `
+          <div class="cat-name">${sec.name}</div>
+          <div class="bar-wrap" aria-label="${sec.name}: média ${norm.toFixed(2)}">
+            <div class="half left"><div class="fill" style="width:${negPct}%; background:${gradientFor(norm)}"></div></div>
+            <div class="half right"><div class="fill" style="width:${posPct}%; background:${gradientFor(norm)}"></div></div>
+          </div>`;
+        catBars.appendChild(row);
+      });
+    }
+
+    function gradientFor(val){
+      // gradiente suave baseado no valor (-1..+1)
+      if(val < -0.33) return 'linear-gradient(90deg, #c92a2a, #ff6b6b)';
+      if(val < 0.33) return 'linear-gradient(90deg, #f08c00, #fcbf49)';
+      return 'linear-gradient(90deg, #2f9e44, #2ec4b6)';
+    }
+
+    // ------------------------------
+    // Restaura respostas salvas
+    // ------------------------------
+    (function restore(){
+      try{
+        const raw = localStorage.getItem('egoico-respostas');
+        if(!raw) return renderCatBars({});
+        const saved = JSON.parse(raw);
+        qMap.forEach(({name})=>{
+          if(saved[name]!==undefined){
+            const v = saved[name];
+            const id = v===-1? `${name}-n` : v===0? `${name}-0` : `${name}-p`;
+            const el = document.getElementById(id);
+            if(el) el.checked = true;
+          }
+        });
+      }catch(e){}
+      countAnswered();
+      calc();
+    })();
+  </script>
+</body>
+</html>
